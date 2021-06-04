@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Graphics example 1";
+}
+<h1>@ViewData["Title"]</h1>
+<br>
+<br>
+<button class="btn btn-outline-primary" onclick="getValuesFromController()">
+    Display Graphic
+</button>
+<div style="width: 40%; height: 40%">
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"></script>
+<script>
+    const url = 'https://localhost:5001/Home/Graphic/values1';
+
+    function getValuesFromController() {
+        $.getJSON(url, function (data) {
+            //console.log(data)
+            var apiValues = data;
+            displayGraphic(apiValues)
+        });
+    }
+
+    function displayGraphic(apiValues) {
+        var ctx = document.getElementById('myChart');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [apiValues.itemPropertyDictionary.Fuel[0].category, 
+                apiValues.itemPropertyDictionary.Polymer[0].category, 
+                apiValues.itemPropertyDictionary.Wood[0].category, 
+                apiValues.itemPropertyDictionary.Food[0].category],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [apiValues.itemPropertyDictionary.Fuel[0].value, 
+                    apiValues.itemPropertyDictionary.Polymer[0].value, 
+                    apiValues.itemPropertyDictionary.Wood[0].value, 
+                    apiValues.itemPropertyDictionary.Food[0].value],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    };
+</script>
